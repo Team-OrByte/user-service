@@ -1,0 +1,38 @@
+type User record {
+    string userId;
+    string fullName;
+    string email;
+    string phoneNumber;
+    string userAddress;
+    string? profilePicture;
+    string createdAt;
+    string updatedAt;
+};
+
+type UserInsert record {
+    string fullName;
+    string email;
+    string phoneNumber;
+    string userAddress;
+    string? profilePicture;
+};
+
+type UserUpdate record {
+    string? fullName;
+    string? email;
+    string? phoneNumber;
+    string? userAddress;
+    string? profilePicture;
+};
+
+type UserPreferences record {
+    string userId;
+    string preferredLanguage;
+    boolean notificationsEnabled;
+};
+
+type Response record {
+    string? message;
+    anydata? data;
+};
+

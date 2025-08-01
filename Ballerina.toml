@@ -1,0 +1,24 @@
+[package]
+org = "sahan"
+name = "user_service"
+version = "0.1.0"
+distribution = "2201.12.7"
+
+[build-options]
+observabilityIncluded = true
+
+[cloud]
+codegen = true
+platform = "docker"
+
+[[platform.java17.dependency]]
+groupId = "org.postgresql"
+artifactId = "postgresql"
+version = "42.2.20"
+
+[ballerina.observe]
+metricsEnabled = false
+tracingEnabled = false
+logsEnabled = true
+logLevel = "DEBUG"
+logFilePath = "./logs/user-service.log"
