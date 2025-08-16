@@ -36,3 +36,8 @@ type Response record {
     anydata? data;
 };
 
+public type Claims record {|
+    string? userId;
+    string? email;
+    string? role;
+|};
