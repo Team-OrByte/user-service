@@ -24,6 +24,7 @@ services:
     volumes:
       - ./Config.toml:/app/Config.toml
       - ./logs:/app/logs
+      - ./public.crt:/home/ballerina/public.crt
     environment:
       BAL_CONFIG_FILES: /app/Config.toml
 
