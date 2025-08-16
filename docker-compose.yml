@@ -6,7 +6,7 @@ services:
     container_name: user_service_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: users_db
+      POSTGRES_DB: user_service_db
       POSTGRES_USER: user_service_user
       POSTGRES_PASSWORD: qwertyui
     volumes:
@@ -27,7 +27,6 @@ services:
       - ./public.crt:/home/ballerina/public.crt
     environment:
       BAL_CONFIG_FILES: /app/Config.toml
-
 
 volumes:
   pgdata:
