@@ -17,6 +17,13 @@ postgresql:Options postgresqlOptions = {
 };
 postgresql:Client dbClient = check new (username = db_user, password = db_pass, database = db_name, host = db_host, port = db_port, options = postgresqlOptions);
 
+@http:ServiceConfig{
+     cors: {
+        allowOrigins: ["*"],
+        allowMethods: ["POST", "OPTIONS"],
+        allowHeaders: ["Content-Type","Access-Control-Allow-Origin","X-Service-Name"]
+    }
+}
 service /user\-service on new http:Listener(5000) {
 
     resource function get users() returns Response {
