@@ -7,6 +7,7 @@ type User record {
     string? profilePicture;
     string createdAt;
     string updatedAt;
+    boolean? compatibility;
 };
 
 type UserInsert record {

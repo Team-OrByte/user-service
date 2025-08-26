@@ -12,13 +12,19 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+     test: ["CMD-SHELL", "pg_isready -U auth_service_user -d auth_db"]
+     interval: 5s
+     timeout: 5s
+     retries: 5
     ports:
       - '5432:5432'
 
   user-service:
     image: user_service:latest
     depends_on:
-      - user_service_db
+       user_service_db:
+        condition: service_healthy
     ports:
       - '5000:5000'
     volumes:

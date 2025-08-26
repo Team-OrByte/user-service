@@ -17,11 +17,11 @@ postgresql:Options postgresqlOptions = {
 };
 postgresql:Client dbClient = check new (username = db_user, password = db_pass, database = db_name, host = db_host, port = db_port, options = postgresqlOptions);
 
-@http:ServiceConfig{
-     cors: {
+@http:ServiceConfig {
+    cors: {
         allowOrigins: ["*"],
         allowMethods: ["POST", "OPTIONS"],
-        allowHeaders: ["Content-Type","Access-Control-Allow-Origin","X-Service-Name"]
+        allowHeaders: ["Content-Type", "Access-Control-Allow-Origin", "X-Service-Name"]
     }
 }
 service /user\-service on new http:Listener(5000) {
@@ -190,7 +190,9 @@ service /user\-service on new http:Listener(5000) {
                                         profile_picture AS profilePicture,
                                         created_at AS createdAt,
                                         updated_at AS updatedAt
-                                        FROM users_profile WHERE userId= ${claims.userId} LIMIT 1`;
+                                FROM users_profile
+                                WHERE user_id = ${claims.userId}
+                                LIMIT 1`;
 
         stream<User, sql:Error?> result = dbClient->query(query, User);
         User[] users = [];
@@ -205,7 +207,7 @@ service /user\-service on new http:Listener(5000) {
                 data: []
             };
         }
-        
+
         if e is error {
             log:printError("Error while processing users stream", err = e.toString());
             return {
@@ -215,12 +217,67 @@ service /user\-service on new http:Listener(5000) {
         } else {
             log:printInfo("Successfully retrieved user: ");
             return {
-                message: "users list retrieved successfully",
+                message: "user retrieved successfully",
                 data: users[0]
             };
         }
 
     };
 
+    @http:ResourceConfig {
+        auth: [
+            {
+                jwtValidatorConfig: {
+                    issuer: "Orbyte",
+                    audience: "vEwzbcasJVQm1jVYHUHCjhxZ4tYa",
+                    signatureConfig: {
+                        certFile: pub_key
+                    },
+                    scopeKey: "scp"
+                },
+                scopes: "user"
+            }
+        ]
+    }
+    resource function get compatibility(@http:Header string Authorization) returns Response {
+        Claims|error claimsResult = extractClaims(Authorization);
+        if (claimsResult is error) {
+            return {
+                message: "Unauthorized",
+                data: []
+            };
+        }
+
+        Claims claims = <Claims>claimsResult;
+
+        sql:ParameterizedQuery query = `SELECT compatibility FROM users_profile WHERE user_id = ${claims.userId} LIMIT 1`;
+
+        stream<record {boolean compatibility;}, sql:Error?> result = dbClient->query(query);
+
+        record {boolean compatibility;}[] rows = [];
+        error? e = result.forEach(function(record {boolean compatibility;} row) {
+            rows.push(row);
+        });
+
+        if e is error {
+            log:printError("Error while processing compatibility stream", err = e.toString());
+            return {
+                message: "Failed to get compatibility",
+                data: []
+            };
+        }
+
+        if rows.length() == 0 {
+            return {
+                message: "User not found",
+                data: []
+            };
+        }
+        
+        return {
+            message: "Compatibility retrieved successfully",
+            data: rows[0].compatibility
+        };
+    }
 }
 
