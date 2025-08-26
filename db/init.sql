@@ -7,7 +7,8 @@ CREATE TABLE users_profile (
     user_address TEXT NOT NULL,
     profile_picture TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    compatibility BOOLEAN DEFAULT TRUE
 );
 
 -- Table: user_preferences 
