@@ -6,7 +6,7 @@ distribution = "2201.12.7"
 
 [build-options]
 observabilityIncluded = true
-cloud = "docker"
+# cloud = "docker"
 
 [cloud]
 codegen = true
