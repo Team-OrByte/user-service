@@ -175,7 +175,7 @@ use the token issued from the auth-service
 
 --- 
 
-License
+## License
 
 This project is part of the OrByte team's ride-hailing application ecosystem.
 
